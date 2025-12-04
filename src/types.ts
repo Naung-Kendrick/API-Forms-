@@ -29,3 +29,8 @@ export type TLoginRes = {
     user: TUser;
     accessToken: string;
 }
+
+export type TLoadUserRes = {
+    success: boolean;
+    user: TUser;
+}
