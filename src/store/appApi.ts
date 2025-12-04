@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { TLoadUserRes , TLoginReq, TLoginRes, TRegisterReq, TRegisterRes } from "../types";
+import type { TLoadUserRes, TLoginReq, TLoginRes, TRegisterReq, TRegisterRes, TUpdateUserInfoReq } from "../types";
 import { userLoggedIn } from "./authSlice";
 import Cookies from "js-cookie";
 
@@ -62,8 +62,27 @@ const appApi = createApi({
                 }
             },
         }),
+
+        updateUserInfo: builder.mutation<TLoadUserRes, TUpdateUserInfoReq>({
+            query: ({ name, email }) => ({
+                url: "/users/update-user-info",
+                method: "PATCH",
+                body: { name, email }
+            }),
+            async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
+                try {
+                    const result = await queryFulfilled;
+                    dispatch(userLoggedIn({
+                        token: "",
+                        user: result.data.user,
+                    }))
+                } catch (error) {
+                    console.log("update user error >>>", error)
+                }
+            },
+        }),
     })
 });
 
-export const { useRegisterMutation, useLoginMutation, useLoadUserQuery } = appApi;
+export const { useRegisterMutation, useLoginMutation, useLoadUserQuery, useUpdateUserInfoMutation } = appApi;
 export default appApi;

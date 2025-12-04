@@ -1,6 +1,8 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import type { AppState } from "../store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useUpdateUserInfoMutation } from "../store/appApi";
+import { userLoggedOut } from "../store/authSlice";
 
 function AppIndex() {
   const { user } = useSelector((state: AppState) => state.auth);
@@ -9,14 +11,29 @@ function AppIndex() {
     name: user?.name || "",
     email: user?.email || "",
   });
+  const dispatch = useDispatch();
+  const [updateInfo, { isLoading, isSuccess, error }] = useUpdateUserInfoMutation();
+
+  useEffect(() => {
+    if(!isLoading && isSuccess) {
+      alert("Updated successfully!")
+    }
+    if (!isLoading && error) {
+      alert((error as any).data.message)
+    }
+  }, [isSuccess, error, isLoading])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Update Payload:", form);
+    if (!form.email.trim() || !form.name.trim()) {
+      alert("Please enter all fields");
+      return;
+    }
+    await updateInfo(form);
   };
 
   return (
@@ -24,7 +41,6 @@ function AppIndex() {
       <h1 className="text-2xl font-semibold mb-5">User Information</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-
         {/* Name */}
         <div>
           <label className="block text-sm font-medium mb-1">Name</label>
@@ -64,11 +80,21 @@ function AppIndex() {
         {/* Update Button */}
         <button
           type="submit"
+          disabled={isLoading}
           className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
         >
           Update
         </button>
       </form>
+
+      <div className="w-full flex justify-center mt-6">
+        <button
+          onClick={() => dispatch(userLoggedOut())}
+          className="py-2 px-6 bg-red-500 text-white rounded-lg font-semibold cursor-pointer"
+        >
+          Logout
+        </button>
+      </div>
     </div>
   );
 }

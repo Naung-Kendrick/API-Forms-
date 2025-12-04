@@ -34,3 +34,8 @@ export type TLoadUserRes = {
     success: boolean;
     user: TUser;
 }
+
+export type TUpdateUserInfoReq = {
+    name: string;
+    email: string;
+}
