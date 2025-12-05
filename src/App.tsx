@@ -6,6 +6,9 @@ import Login from "./pages/Login";
 import PageNotFound from "./pages/PageNotFound";
 import UserProtected from "./routes/UserProtected";
 import AuthProtected from "./routes/AuthProtected";
+import UpdatePassword from "./pages/UpdatePassword";
+import AdminProtected from "./routes/AdminProtected";
+import UserList from "./pages/UserList";
 
 function App() {
   return (
@@ -27,6 +30,18 @@ function App() {
             <AuthProtected>
               <Login />
             </AuthProtected>
+          } />
+
+          <Route path="update-password" element={
+            <UserProtected>
+              <UpdatePassword />
+            </UserProtected>
+          } />
+
+          <Route path="user-list" element={
+            <AdminProtected>
+              <UserList />
+            </AdminProtected>
           } />
 
           <Route path="*" element={<PageNotFound />} />

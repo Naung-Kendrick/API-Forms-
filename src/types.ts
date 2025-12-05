@@ -39,3 +39,23 @@ export type TUpdateUserInfoReq = {
     name: string;
     email: string;
 }
+
+export type TUpdateUserPwdReq = {
+    oldPassword: string;
+    newPassword: string;
+}
+
+export type TUpdateUserRoleReq = {
+    id: string;
+    role: number;
+}
+
+export type TDeleteUserRes = {
+    success: boolean;
+    message: string;
+}
+
+export type TGetUsersRes = {
+    success: boolean;
+    users: TUser[];
+}

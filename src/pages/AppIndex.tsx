@@ -3,6 +3,7 @@ import type { AppState } from "../store";
 import { useEffect, useState } from "react";
 import { useUpdateUserInfoMutation } from "../store/appApi";
 import { userLoggedOut } from "../store/authSlice";
+import { Link } from "react-router-dom";
 
 function AppIndex() {
   const { user } = useSelector((state: AppState) => state.auth);
@@ -38,7 +39,17 @@ function AppIndex() {
 
   return (
     <div className="max-w-xl min-w-lg mx-auto bg-white shadow rounded-lg p-6 mt-6">
-      <h1 className="text-2xl font-semibold mb-5">User Information</h1>
+      <h1 className="text-2xl font-semibold">User Information</h1>
+
+      <div className="my-3">
+        <Link to={"/update-password"} className="underline underline-offset-4 text-blue-500">Update Password</Link>
+      </div>
+
+      {
+        user?.role === 1 && (
+          <Link to={"/user-list"} className="underline underline-offset-4 text-blue-500">User List</Link>
+        )
+      }
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Name */}
